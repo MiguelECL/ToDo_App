@@ -17,6 +17,8 @@
 1. Download FrontEnd folder.
 2. ...
 3. Run `npm install`.
-4. Run `npm start` to start the project.
+4. Run `npm start` to start the frontend.
 
 ## BackEnd
+1. Download BackEnd folder.
+2. run `mvn spring-boot:run` to start the backend.
