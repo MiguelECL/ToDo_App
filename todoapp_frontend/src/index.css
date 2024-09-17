@@ -27,7 +27,7 @@ body{
 }
 
 .FilterBox {
-  border: solid 1px rgb(120, 120, 120);
+  border: solid 2px rgb(120, 120, 120);
   padding:10px;
   border-radius: 20px;
   margin: 10px;
@@ -40,12 +40,12 @@ body{
 
 .ToDoList {
   height:50vh;
-  border: solid 1px gray;
+  border: solid 2px gray;
   margin: 10px;
   border-radius: 20px;
 }
 .todo-table{
-  transform: scale(0.90);
+  transform: scale(0.80);
   width: 80vw;
   margin: 0px auto;
   padding: 0px;
@@ -59,7 +59,7 @@ body{
   justify-items: center;
   padding:20px;
   margin: 10px;
-  border: solid 1px rgb(120,120,120);
+  border: solid 2px rgb(120,120,120);
   border-radius: 20px;
 }
 
@@ -77,16 +77,16 @@ body{
 }
 
 button{
-  background-color: gray;
+  background-color: rgb(40, 40, 55);
 }
 
 select{
-  background-color: gray;
+  background-color: rgb(40, 40, 55);
 }
 
 input, input::placeholder{
   color: white;
-  background-color: gray;
+  background-color: rgb(40, 40, 55);
 }
 
 td {
@@ -105,7 +105,7 @@ td {
 
 thead {
   top:82px;
-  background-color: gray;
+  background-color: rgb(40, 40, 55);
 }
 
 
@@ -135,7 +135,7 @@ thead {
   margin:5px;
   margin-left: 10px;
   border-radius: 10px;
-  background-color: gray;
+  background-color: rgb(40, 40, 55);;
 }
 
 button:hover{
