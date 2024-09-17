@@ -171,7 +171,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 numberOfItems++;
                 let creationTime = Date.parse(item.creationDate);
                 let doneTime = Date.parse(item.doneDate);
-                let differenceSeconds = (doneTime - creationTime)/1000;
+                let differenceSeconds = Math.round((doneTime - creationTime)/(1000*60));
                 console.log(differenceSeconds);
                 timeTotal += differenceSeconds;
                 TimeData.setTimeTotal(timeTotal/numberOfItems);

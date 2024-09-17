@@ -22,7 +22,7 @@ const CreateModal = ({update, setUpdate}:{update:boolean, setUpdate:Function}) =
         let creationDate = new Date().toISOString();
         console.log(creationDate);
         // if name is not empty
-        if (name !== ""){
+        if (name.trim() !==  ""){
             let Add = {id, name, priority, dueDate, doneFlag, doneDate, creationDate};
             console.log(Add);
             console.log(JSON.stringify(Add));
