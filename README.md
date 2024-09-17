@@ -2,7 +2,9 @@
  To-Do App done as part of Encora software developer internship
 
  ## **NOTE** 
- Due to issues with GitHub, 2 repositories were merged into a single one, to view individual changes to repository visit the repositories individually
+ Due to issues with GitHub, 2 repositories were merged into a single one, to view individual changes to repository visit the repositories individually.
+ - https://github.com/MiguelECL/todoapp_frontend
+ - https://github.com/MiguelECL/todoapp_backend
 
 # Technologies
 ## FrontEnd
