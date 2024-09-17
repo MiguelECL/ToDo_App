@@ -23,4 +23,5 @@
 
 ## BackEnd
 1. Download folder `todoapp_backend`.
-2. run `mvn spring-boot:run` to start the backend.
+2. cd to the folder.
+3. run `mvn spring-boot:run` to start the backend.
