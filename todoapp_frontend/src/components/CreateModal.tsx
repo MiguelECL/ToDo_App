@@ -35,6 +35,7 @@ const CreateModal = ({update, setUpdate}:{update:boolean, setUpdate:Function}) =
                 body: JSON.stringify(Add)
             }).then(() => {
                 setName("");
+                setUpdate(!update);
             }).catch(error => {
                 console.log(error);
             })
