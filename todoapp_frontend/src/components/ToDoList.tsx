@@ -285,11 +285,11 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                     ))}
                 </tbody>
             </table>
-            <div className="pageControls">
+            <p className="pageControls">
                 { currentPage !== 1 && <button onClick={handlePaginatePrev}>{currentPage-1}</button>}
                 {currentPage}
                 {toDos.length > currentPage*10 && <button onClick={handlePaginateNext}>{currentPage+1}</button>}
-            </div>
+            </p>
             {modal &&
                 <div className="Modal">
                     <form onSubmit={(e) => handleEdit(e)}>

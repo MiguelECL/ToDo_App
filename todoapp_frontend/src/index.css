@@ -44,12 +44,15 @@ body{
   border: solid 2px gray;
   margin: 10px;
   border-radius: 20px;
+  padding:0px;
+  font-size: 6px;
 }
 .todo-table{
-  transform: scale(0.80);
   width: 80vw;
   margin: 0px auto;
   padding: 0px;
+  position: relative;
+  font-size: 6px;
 }
 
 .TimeComponent{
@@ -111,17 +114,12 @@ th {
   border-radius: 10px;
 }
 
-td {
-  border-radius: 10px;
-}
 
 
 .pageControls{
   width: fit-content;
-  margin: 15px auto;
+  margin: auto;
   transform: scale(0.6);
-  position:relative;
-  top: -30px;
 }
 
 .Modal{
@@ -151,4 +149,8 @@ button:hover{
 
 .pageControls button{
   margin: 0 10px;
+}
+
+td, td button{
+  font-size: 22px;
 }
