@@ -34,10 +34,10 @@ const CreateModal = ({update, setUpdate}:{update:boolean, setUpdate:Function}) =
                 },
                 body: JSON.stringify(Add)
             }).then(() => {
-                console.log("posted data");
-                setUpdate(!update);
+                setName("");
+            }).catch(error => {
+                console.log(error);
             })
-            setName("");
         } 
         toggleModal();
     }

@@ -23,7 +23,8 @@ body{
 .NavBar h1{
   background-color: inherit;
   color: white;
-  font-size: 30px;
+  font-size: 40px;
+  margin: 0px
 }
 
 .FilterBox {
@@ -78,6 +79,7 @@ body{
 
 button{
   background-color: rgb(40, 40, 55);
+  border-radius: 10px;
 }
 
 select{
@@ -103,18 +105,23 @@ td {
   top:42px;
 }
 
-thead {
+th {
   top:82px;
   background-color: rgb(40, 40, 55);
+  border-radius: 10px;
+}
+
+td {
+  border-radius: 10px;
 }
 
 
 .pageControls{
   width: fit-content;
   margin: 15px auto;
-  position: relative;
-  top: -30px;
   transform: scale(0.6);
+  position:relative;
+  top: -50px;
 }
 
 .Modal{

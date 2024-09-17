@@ -59,31 +59,30 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     useEffect(() => {
         let finalEndpoint = 'http://localhost:9090/todos?searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
         fetch(finalEndpoint,{
-        method:"GET",
-        headers: {"Content-Type":"application/json"}
-    }).then(response => {
-    if(response.ok){
-        return response.json();
-    }
-    throw response;
-    }).then((data) => {
-        setToDos(data);
-    }).then(() => {
-        let finalEndpoint = 'http://localhost:9090/todos?page=' + parameter0 +'&searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
-        fetch(finalEndpoint,{
-        method:"GET",
-        headers: {"Content-Type":"application/json"}
-    }).then(response => {
-    if(response.ok){
-        return response.json();
-    }
-    throw response;
-    }).then((data) => {
-        setCurrentToDos(data);
-        setIsLoading(false);
-        setUpdateMetrics(!updateMetrics);
-    });
-    });
+            method:"GET",
+            headers: {"Content-Type":"application/json"}
+        }).then(response => {
+            if(response.ok){
+                return response.json();
+        }}).then((data) => {
+            setToDos(data);
+        }).then(() => {
+            let finalEndpoint = 'http://localhost:9090/todos?page=' + parameter0 +'&searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
+            fetch(finalEndpoint,{
+                method:"GET",
+                headers: {"Content-Type":"application/json"}
+            }).then(response => {
+                if(response.ok){
+                    return response.json();
+                }
+            }).then((data) => {
+                setCurrentToDos(data);
+                setIsLoading(false);
+                setUpdateMetrics(!updateMetrics);
+        })
+        }).catch(error => {
+            console.log('Failed to fetch Data ' + error)
+        });
     },[update,searchParameters]);
 
     const toggleModal = () => {
@@ -103,6 +102,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }).then(() => {
             toggleModal();
             setUpdate(!update);
+        }).catch(error => {
+            console.log('failed to communicte with API , is the server running? Error: ' + error);
         })
     }
 
@@ -117,6 +118,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }).then(() => {
             toggleModal();
             setUpdate(!update);
+        }).catch(error => {
+            console.log('failed to communicte with API , is the server running? Error: ' + error);
         })
     }
 
