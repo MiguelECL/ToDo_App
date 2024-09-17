@@ -18,12 +18,13 @@
 - Maven
 
 # Build Instructions
+Download or clone the repository first!
+
 ##  FrontEnd
-1. Download folder `todoapp_frontend`.
-3. cd to the folder & run `npm install` to install dependencies.
-4. Run `npm start` to start the frontend.
+1. cd to folder `todoapp_frontend`.
+2. run `npm install` to install dependencies.
+3. Run `npm start` to start the frontend.
 
 ## BackEnd
-1. Download folder `todoapp_backend`.
-2. cd to the folder.
-3. run `mvn spring-boot:run` to start the backend.
+1. cd to folder `todoapp_backend`.
+2. run `mvn spring-boot:run` to start the backend.
