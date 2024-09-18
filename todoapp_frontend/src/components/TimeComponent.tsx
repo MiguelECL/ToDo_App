@@ -9,9 +9,9 @@ const TimeComponent = () => {
     let formatLow = new Date(0);
 
     formatTotal.setSeconds(timeData.timeTotal);
-    formatHigh.setSeconds(timeData.timeTotal);
-    formatMedium.setSeconds(timeData.timeTotal);
-    formatLow.setSeconds(timeData.timeTotal);
+    formatHigh.setSeconds(timeData.timeHigh);
+    formatMedium.setSeconds(timeData.timeMedium);
+    formatLow.setSeconds(timeData.timeLow);
 
     let stringTotal = formatTotal.toISOString().substring(11,19);
     let stringHigh = formatHigh.toISOString().substring(11,19);
