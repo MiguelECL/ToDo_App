@@ -2,6 +2,13 @@ import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "../context/TimeDataContext";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
+   // you left unused parameters
+
+    /*
+     there are a lot of states. you can use an object to simplify your code or use useReducer
+     because in the long term this code will be unmaintainable and no scalable
+
+     */
     const [modal, setModal] = useState(false);
 
     const [id, setId] = useState(Date.now());
@@ -16,9 +23,9 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     const [currentPage, setCurrentPage] = useState(1);
     const [currentToDos, setCurrentToDos] = useState([]);
     const [updateMetrics, setUpdateMetrics] = useState(false);
-    
 
-    const TimeData = useDataContext();
+
+    const TimeData = useDataContext(); // when naming you context variable use a more explicit name like timeDataContext to differentiate it form other vars
     let prioritySort = ["no","ascending","descending"];
     let dateSort = ["no","ascending","descending"];
     const [indexPrioritySort, setIndexPrioritySort] = useState(0);
@@ -31,21 +38,35 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             setIndexPrioritySort(0);
         } else {
             setIndexPrioritySort(indexPrioritySort + 1);
-            console.log(indexPrioritySort);
+            console.log(indexPrioritySort); // avoid left console logs
         }
         setUpdate(!update);
     }
 
-    const handleDateSort = (e:SyntheticEvent) => {   
+    const handleDateSort = (e:SyntheticEvent) => {
         if(indexDateSort === 2){
             setIndexDateSort(0);
         } else {
             setIndexDateSort(indexDateSort + 1);
-            console.log(indexDateSort);
+            console.log(indexDateSort);  // avoid left console logs
         }
         setUpdate(!update);
     }
-   
+/*
+let currentPageNumber = currentPage;                // Indicates it's the current page number
+let mainSearchParameter = searchParameters[0];      // Reflects the first search parameter
+let secondarySearchParameter = searchParameters[1]; // Reflects the second search parameter
+let tertiarySearchParameter = searchParameters[2];  // Reflects the third search parameter
+let prioritizedSortMethod = prioritySort[indexPrioritySort];  // The prioritized sort method
+let dateSortMethod = dateSort[indexDateSort];       // The sort method based on date
+
+# Explanation
+currentPageNumber: Clearly states that it’s the current page number.
+mainSearchParameter, secondarySearchParameter, tertiarySearchParameter: Clarifies the distinction between the first, second, and third search parameters.
+prioritizedSortMethod: Makes it clear that this is the method used for prioritized sorting.
+dateSortMethod: Specifies that this is the sorting method based on dates.
+
+ */
     // SEARCH AND SORT PARAMETERS
     let parameter0 = currentPage;
     let parameter1 = searchParameters[0];
@@ -53,6 +74,63 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     let parameter3 = searchParameters[2];
     let parameter4 = prioritySort[indexPrioritySort];
     let parameter5 = dateSort[indexDateSort]
+
+
+    /*
+     it's a best practice to use an async function to avoid the 'cascade' of then's that makes very hard to read
+
+     // Function to build the endpoint URL with all the necessary parameters
+const buildEndpointUrl = (baseURL, page, searchName, searchPriority, searchState, sortPriority, sortDate) => {
+    return `${baseURL}/todos?page=${page}&searchName=${searchName}&searchPriority=${searchPriority}&searchState=${searchState}&sortPriority=${sortPriority}&sortDate=${sortDate}`;
+};
+
+// Base URL for the API
+const baseURL = 'http://localhost:9090';
+
+// Async function to fetch data
+const fetchToDos = async () => {
+    try {
+        // First fetch request
+        const firstEndpoint = buildEndpointUrl(baseURL, '', parameter1, parameter2, parameter3, parameter4, parameter5);
+        const response1 = await fetch(firstEndpoint, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!response1.ok) {
+            throw new Error('Failed to fetch initial todos');
+        }
+
+        const data1 = await response1.json();
+        setToDos(data1);
+
+        // Second fetch request with `parameter0` for the page
+        const secondEndpoint = buildEndpointUrl(baseURL, parameter0, parameter1, parameter2, parameter3, parameter4, parameter5);
+        const response2 = await fetch(secondEndpoint, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!response2.ok) {
+            throw new Error('Failed to fetch current todos');
+        }
+
+        const data2 = await response2.json();
+        setCurrentToDos(data2);
+
+        // Update state after fetching data
+        setIsLoading(false);
+        setUpdateMetrics(prevState => !prevState);
+
+    } catch (error) {
+        console.log('Error fetching data:', error);
+    }
+};
+
+// Call the function to fetch todos
+fetchToDos();
+
+     */
 
 
     // FETCH DATA GET
@@ -107,9 +185,9 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         })
     }
 
-    const handleDelete = (e:SyntheticEvent) => {
+    const handleDelete = (e:SyntheticEvent) => {/// use async functions
         e.preventDefault();
-        
+
         fetch('http://localhost:9090/todos/'+[id],{
             method:"DELETE",
             headers: {
@@ -123,9 +201,9 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         })
     }
 
-    const handleCheck = (e:SyntheticEvent, item:any) => {
-       e.preventDefault();   
-        
+    const handleCheck = (e:SyntheticEvent, item:any) => { /// use async functions
+       e.preventDefault();
+
        item.doneFlag = (!item.doneFlag);
        if(item.doneFlag){
             let addDoneDate = (new Date().toISOString());
@@ -137,7 +215,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             }).then(() => {
                 setUpdate(!update);
             })
-            console.log("posted");
+            console.log("posted"); // avoid console logs
        } else {
             let addDoneDate = ("");
             let updateToDo = {...item,doneDate:addDoneDate};
@@ -147,17 +225,21 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 body: JSON.stringify(updateToDo)
             }).then(()=> {
                 setUpdate(!update);
-               
+
             })
             console.log("putted");
        }
-       
+
     }
-    
+
     // METRICS
     useEffect(() => {
         let timeTotal = 0;
         let numberOfItems = 0;
+        /*  make more legible the code by destructuring the setters
+        const { setTimeTotal ,setTimeHigh ... } = TimeData
+
+         */
         TimeData.setTimeTotal(0);
         TimeData.setTimeHigh(0);
         TimeData.setTimeMedium(0);
@@ -165,14 +247,14 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         toDos.map((item:any) => {
             // if item is done, compute difference in minutes that it took to finish said task.
             if(item.doneFlag === true && item.doneDate !== ""){
-                console.log("yeah");
+                console.log("yeah"); // avoid left console logs
                 numberOfItems++;
                 let creationTime = Date.parse(item.creationDate);
                 let doneTime = Date.parse(item.doneDate);
                 let differenceSeconds = ((doneTime - creationTime)/(1000)); //seconds
-                console.log(differenceSeconds);
+                console.log(differenceSeconds);  // avoid left console logs
                 timeTotal += differenceSeconds;
-                
+
                 TimeData.setTimeTotal(timeTotal/numberOfItems);
 
                 switch(item.priority){
@@ -188,7 +270,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                     default:
                         console.log("ERROR");
                 }
-            } 
+            }
         })
     },[updateMetrics])
 
@@ -201,15 +283,50 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
 
     const handlePaginateNext = () => {
         let sizeToDos = toDos.length;
-        console.log(sizeToDos);
-        
-        if(sizeToDos > currentPage*10){
-            console.log("here");
+        console.log(sizeToDos); // avoid left console logs
+
+        if(sizeToDos > currentPage*10){ // if you are using constants declare them in the top of your code ex:  MAX_PAGE = 10
+            console.log("here"); // avoid left console logs
             setCurrentPage(currentPage + 1);
             setUpdate(!update);
         }
     }
     //item.doneFlag ? {textDecoration:"line-through",textDecorationColor:"gray",opacity:"0.5"} : {textDecoration:"none"}
+
+    /*
+    there are a lot of if statements avoid them in that many because it's hard to read
+    const ToDoRowStyle = (item: any) => {
+    const itemDate = Date.parse(item.dueDate);
+    const timeDifference = itemDate - Date.now();
+
+    // Define color ranges based on the time difference
+    const getBackgroundColor = () => {
+        if (!item.dueDate) return "";
+        if (timeDifference < 604800000) return "FireBrick"; // Less than 7 days
+        if (timeDifference < 1.2096E9) return "GoldenRod";  // Less than 14 days
+        return "green";                                     // More than 14 days
+    };
+
+    // Define style based on if the item is done
+    const baseStyle = {
+        backgroundColor: getBackgroundColor(),
+    };
+
+    // Add additional styles for done items
+    if (item.doneFlag) {
+        return {
+            ...baseStyle,
+            textDecoration: "line-through",
+            opacity: "0.4"
+        };
+    }
+
+    return baseStyle;
+};
+
+     */
+
+
     const ToDoRowStyle = (item:any) => {
         let itemDate = Date.parse(item.dueDate);
         let style = {};
@@ -280,7 +397,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                                 setDoneFlag(item.doneFlag);
                                 toggleModal();
                             }}>Edit</button></td>
-                            
+
                         </tr>
                     ))}
                 </tbody>
