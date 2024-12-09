@@ -1,5 +1,6 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "../context/TimeDataContext";
+import { Container } from "@mui/material";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
     const [modal, setModal] = useState(false);
@@ -248,7 +249,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     }
 
     return (
-        <div className="ToDoList">
+        <Container className="ToDoList">
             <table className="todo-table">
                 <thead>
                     <tr>
@@ -306,7 +307,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                     </form>
                 </div>
             }
-        </div>
+        </Container>
     );
 }
 

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import ToDoList from './components/ToDoList';
 import NavBar from './components/NavBar';
-import FilterBox from './components/FilterBox';
+import FilterBox from './components/presentational/FilterBox';
 import TimeComponent from './components/TimeComponent';
-import CreateModal from './components/CreateModal';
+import CreateModal from './components/presentational/CreateModal';
 import { TimeDataContext } from './context/TimeDataContext';
+import { Container } from '@mui/material';
 
 function App() {
   const [update, setUpdate] = useState(false);
@@ -20,7 +21,7 @@ function App() {
   let endpoint:string = "http://localhost:9090"
   
   return (  
-    <div className="App">
+    <Container className="App">
       <NavBar />
       <FilterBox update={update} setUpdate={setUpdate} setSearchParameters={setSearchParameters}/>
       <CreateModal update={update} setUpdate={setUpdate} />
@@ -28,7 +29,7 @@ function App() {
         <ToDoList endpoint={endpoint} searchParameters={searchParameters} update={update} setUpdate={setUpdate} />
         <TimeComponent />
       </TimeDataContext.Provider>
-    </div>
+    </Container>
   );
 }
 

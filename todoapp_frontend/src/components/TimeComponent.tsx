@@ -1,37 +1,36 @@
+import { Container, List, ListItem, ListItemText, ListSubheader, Stack } from "@mui/material";
 import { useDataContext } from "../context/TimeDataContext";
+import { formatData } from "./container/formatData";
 
 const TimeComponent = () => {
     const timeData = useDataContext();
 
-    let formatTotal = new Date(0);
-    let formatHigh = new Date(0);
-    let formatMedium = new Date(0);
-    let formatLow = new Date(0);
+    const { stringTotal, stringHigh, stringMedium, stringLow } = formatData(timeData);
 
-    formatTotal.setSeconds(timeData.timeTotal);
-    formatHigh.setSeconds(timeData.timeHigh);
-    formatMedium.setSeconds(timeData.timeMedium);
-    formatLow.setSeconds(timeData.timeLow);
-
-    let stringTotal = formatTotal.toISOString().substring(11,19);
-    let stringHigh = formatHigh.toISOString().substring(11,19);
-    let stringMedium = formatMedium.toISOString().substring(11,19);
-    let stringLow = formatLow.toISOString().substring(11,19);
-
-    return (    
-        <div className="TimeComponent">
-            <div className="timeColumn">
-                <p>Average Time To Finish Tasks</p>
-                <p>{stringTotal}</p>
-            </div>
-            <div className="timeColumn">
-                <p>Average Time To Finish Tasks by Priority</p>
-                <p>Low: {stringHigh}</p>
-                <p>Medium: {stringMedium}</p>
-                <p>High: {stringLow}</p>
-            </div>
-        </div>
-     );
+    return (
+            <Stack direction="row" maxWidth="lg" sx={{width: '100%', justifyContent: "center"}} spacing={2}>
+                <Stack className="timeColumn">
+                    <List>
+                        <ListItem>
+                            <ListItemText primary="Average Time to Finish Tasks" secondary={`${stringTotal}`}/>
+                        </ListItem>
+                    </List>
+                </Stack>
+                <Stack className="timeColumn">
+                    <List subheader={<ListSubheader>Average Time to Finish Tasks by Priority</ListSubheader>}>
+                        <ListItem>
+                            <ListItemText primary="Low" secondary={`${stringLow}`}/>
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText primary="Medium" secondary={`${stringMedium}`}/>
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText primary="High" secondary={`${stringHigh}`}/>
+                        </ListItem>
+                    </List>
+                </Stack>
+            </Stack>
+    );
 }
- 
+
 export default TimeComponent;

@@ -1,54 +1,34 @@
 import { SyntheticEvent, useState } from "react";
+import { handleAddToDo } from "../container/handleAddTodo";
 
 const CreateModal = ({update, setUpdate}:{update:boolean, setUpdate:Function}) => {
 
     const [modal, setModal] = useState(false);
-    
     const [name, setName] = useState("");
     const [priority, setPriority] = useState("Medium");
     const [dueDate, setDueDate] = useState("");
     const [doneFlag, setdoneFlag] = useState(false);
     const [doneDate, setDoneDate] = useState("");
 
-    const toggleModal = () => {
-        setModal(!modal)
-    }
-
-    const handleAddToDo = (e:SyntheticEvent) => {
-        e.preventDefault();
-
-        console.log(Date.now())
-        let id = (Date.now());
-        let creationDate = new Date().toISOString();
-        console.log(creationDate);
-        // if name is not empty
-        if (name.trim() !==  ""){
-            let Add = {id, name, priority, dueDate, doneFlag, doneDate, creationDate};
-            console.log(Add);
-            console.log(JSON.stringify(Add));
-
-            fetch("http://localhost:9090/todos",{
-                method:"POST",
-                headers: {
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify(Add)
-            }).then(() => {
-                setName("");
-                setUpdate(!update);
-            }).catch(error => {
-                console.log(error);
-            })
-        } 
-        toggleModal();
-    }
+    let id = (Date.now());
+    let creationDate = new Date().toISOString();
+    let Add = { 
+        id, 
+        name, setName,
+        priority, setPriority,
+        dueDate, setDueDate,
+        doneFlag, 
+        doneDate, 
+        creationDate,
+        setModal 
+    };
 
     return (  
         <div>
-            <button className="addbutton" onClick={toggleModal}>Add To Do</button>
+            <button className="addbutton" onClick={() => {setModal(!modal)}}>Add To Do</button>
             {modal && 
                 <div className="Modal">
-                    <form onSubmit={(e) => handleAddToDo(e)}>
+                    <form onSubmit={(e) => handleAddToDo(e, Add)}>
                         <h1>Add To Do</h1>
                         <input type="text" autoFocus maxLength={120} value={name} onChange={(e) => setName(e.target.value)}></input>
                         <select value={priority} onChange={(e) => setPriority(e.target.value)}>
