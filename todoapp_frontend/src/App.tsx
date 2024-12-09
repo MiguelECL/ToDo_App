@@ -6,6 +6,8 @@ import TimeComponent from './components/TimeComponent';
 import CreateModal from './components/presentational/CreateModal';
 import { TimeDataContext } from './context/TimeDataContext';
 import { Container } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 function App() {
   const [update, setUpdate] = useState(false);
@@ -21,6 +23,7 @@ function App() {
   let endpoint:string = "http://localhost:9090"
   
   return (  
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Container className="App">
       <NavBar />
       <FilterBox update={update} setUpdate={setUpdate} setSearchParameters={setSearchParameters}/>
@@ -30,6 +33,7 @@ function App() {
         <TimeComponent />
       </TimeDataContext.Provider>
     </Container>
+    </LocalizationProvider>
   );
 }
 

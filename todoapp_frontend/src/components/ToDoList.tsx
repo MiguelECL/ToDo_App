@@ -1,6 +1,6 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "../context/TimeDataContext";
-import { Container } from "@mui/material";
+import { Button, Container, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
     const [modal, setModal] = useState(false);
@@ -250,28 +250,28 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
 
     return (
         <Container className="ToDoList">
-            <table className="todo-table">
-                <thead>
-                    <tr>
-                        <th>Mark</th>
-                        <th>Name</th>
-                        <th><button onClick={(e) => handlePrioritySort(e)}>Priority &lt;&gt; </button></th>
-                        <th><button onClick={(e) => handleDateSort(e)}>Due Date &lt;&gt; </button></th>
-                        <th>State</th>
-                        <th>Edit</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table className="todo-table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Mark</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell><Button variant="outlined" onClick={(e) => handlePrioritySort(e)}>Priority &lt;&gt; </Button></TableCell>
+                        <TableCell><Button variant="outlined" onClick={(e) => handleDateSort(e)}>Due Date &lt;&gt; </Button></TableCell>
+                        <TableCell>State</TableCell>
+                        <TableCell>Edit</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {!isLoading && currentToDos.map((item:any) => (
-                        <tr key={item.id} style={ToDoRowStyle(item)}>
-                            <td><button onClick={(e) => {
+                        <TableRow key={item.id} style={ToDoRowStyle(item)}>
+                            <TableCell><Button variant="outlined" onClick={(e) => {
                                 handleCheck(e,item)}}>
-                            Toggle</button></td>
-                            <td>{item.name}</td>
-                            <td>{item.priority}</td>
-                            <td>{item.dueDate}</td>
-                            <td>{item.doneFlag ? "Done" : "Undone"}</td>
-                            <td><button onClick={() => {
+                            Toggle</Button></TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.priority}</TableCell>
+                            <TableCell>{item.dueDate}</TableCell>
+                            <TableCell>{item.doneFlag ? "Done" : "Undone"}</TableCell>
+                            <TableCell><Button variant="outlined" onClick={() => {
                                 setId(item.id);
                                 setName(item.name);
                                 setPriority(item.priority);
@@ -280,32 +280,32 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                                 setDoneDate(item.doneDate);
                                 setDoneFlag(item.doneFlag);
                                 toggleModal();
-                            }}>Edit</button></td>
+                            }}>Edit</Button></TableCell>
                             
-                        </tr>
+                        </TableRow>
                     ))}
-                </tbody>
-            </table>
-            <p className="pageControls">
-                { currentPage !== 1 && <button onClick={handlePaginatePrev}>{currentPage-1}</button>}
+                </TableBody>
+            </Table>
+            <Container className="pageControls">
+                { (currentPage !== 1 ) && <button onClick={handlePaginatePrev}>{currentPage-1}</button>}
                 {currentPage}
                 {toDos.length > currentPage*10 && <button onClick={handlePaginateNext}>{currentPage+1}</button>}
-            </p>
+            </Container>
             {modal &&
-                <div className="Modal">
+                <Container className="Modal">
                     <form onSubmit={(e) => handleEdit(e)}>
                         <h1>Edit To-Do</h1>
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)}></input>
-                        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
+                        <TextField type="text" value={name} onChange={(e) => setName(e.target.value)}></TextField>
+                        <Select value={priority} onChange={(e) => setPriority(e.target.value)}>
+                            <MenuItem value="High">High</MenuItem>
+                            <MenuItem value="Medium">Medium</MenuItem>
+                            <MenuItem value="Low">Low</MenuItem>
+                        </Select>
                         <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}></input>
-                        <button type="submit">Edit To Do</button>
-                        <button onClick={(e) => handleDelete(e)}>Delete To Do</button>
+                        <Button type="submit">Edit To Do</Button>
+                        <Button onClick={(e) => handleDelete(e)}>Delete To Do</Button>
                     </form>
-                </div>
+                </Container>
             }
         </Container>
     );

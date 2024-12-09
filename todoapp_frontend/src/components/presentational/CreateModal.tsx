@@ -1,47 +1,61 @@
 import { SyntheticEvent, useState } from "react";
 import { handleAddToDo } from "../container/handleAddTodo";
+import { Button, Container, Dialog, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 
-const CreateModal = ({update, setUpdate}:{update:boolean, setUpdate:Function}) => {
+const CreateModal = ({ update, setUpdate }: { update: boolean, setUpdate: Function }) => {
 
-    const [modal, setModal] = useState(false);
+    const [open, setOpen] = useState(false);
     const [name, setName] = useState("");
     const [priority, setPriority] = useState("Medium");
-    const [dueDate, setDueDate] = useState("");
+    const [dueDateDayjs, setDueDateDayjs] = useState<Dayjs | null>();
     const [doneFlag, setdoneFlag] = useState(false);
     const [doneDate, setDoneDate] = useState("");
 
     let id = (Date.now());
     let creationDate = new Date().toISOString();
-    let Add = { 
-        id, 
+    let dueDate = dayjs(dueDateDayjs).format("YYYY-MM-DD");
+    let Add = {
+        id,
         name, setName,
         priority, setPriority,
-        dueDate, setDueDate,
-        doneFlag, 
-        doneDate, 
+        dueDate,
+        doneFlag,
+        doneDate,
         creationDate,
-        setModal 
     };
 
-    return (  
-        <div>
-            <button className="addbutton" onClick={() => {setModal(!modal)}}>Add To Do</button>
-            {modal && 
-                <div className="Modal">
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <Container sx={{ marginTop: 5, marginBottom: 5 }}>
+            <Button variant="contained" fullWidth className="addbutton" onClick={handleOpen}>Add To Do</Button>
+            <Dialog open={open} onClose={handleClose}>
+                <Container maxWidth="lg" sx={{ padding: 5 }}>
                     <form onSubmit={(e) => handleAddToDo(e, Add)}>
-                        <h1>Add To Do</h1>
-                        <input type="text" autoFocus maxLength={120} value={name} onChange={(e) => setName(e.target.value)}></input>
-                        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
-                        <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}></input>
-                        <button type="submit">Add To Do</button>
+                        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)}></TextField>
+                        <FormControl>
+                            <InputLabel>Priority</InputLabel>
+                            <Select label="Priority" defaultValue={"Medium"}>
+                                <MenuItem value="High">High</MenuItem>
+                                <MenuItem value="Medium">Medium</MenuItem>
+                                <MenuItem value="Low">Low</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <DatePicker value={dueDateDayjs} onChange={(newValue) => setDueDateDayjs(newValue)}></DatePicker>
+                        <Button type="submit">Add To Do</Button>
                     </form>
-                </div>}
-        </div>
+                </Container>
+            </Dialog>
+        </Container>
     );
 }
- 
+
 export default CreateModal;

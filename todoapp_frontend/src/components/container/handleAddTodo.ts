@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import { SyntheticEvent } from "react";
 
 export const handleAddToDo = (e: SyntheticEvent, Add: {
@@ -7,14 +8,13 @@ export const handleAddToDo = (e: SyntheticEvent, Add: {
     priority: string,
     setPriority: Function,
     dueDate: string,
-    setDueDate: Function,
     doneFlag: boolean,
     doneDate: string,
     creationDate: string,
-    setModal: Function,
 }) => {
 
     e.preventDefault();
+    
     // if name is not empty
     if (Add.name.trim() !== "") {
         console.log(Add);
@@ -32,5 +32,4 @@ export const handleAddToDo = (e: SyntheticEvent, Add: {
             console.log(error);
         })
     }
-    Add.setModal();
 }

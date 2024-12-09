@@ -1,6 +1,8 @@
+import { Typography } from "@mui/material";
+
 const NavBar = () => {
     return (  
-        <h1>2 Dooo</h1>
+        <Typography>To-Dooo (Revamped)</Typography>
     );
 }
  

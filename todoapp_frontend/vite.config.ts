@@ -5,7 +5,7 @@ export default defineConfig({
     // Configuration options
     plugins: [react()],
     server: {
-        port: 3000,
+        port: 8080,
         open: true,
     },
     build: {

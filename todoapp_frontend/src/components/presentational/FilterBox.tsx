@@ -15,7 +15,7 @@ const FilterBox = ({ update, setUpdate, setSearchParameters }: { update: boolean
 
     return (
         <Container className="FilterBox">
-            <FormControl fullWidth onClick={HandleSubmit}>
+            <form>
                 <Stack spacing={2}>
                     <TextField label="Name" variant="outlined" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
                     <Select value={searchPriority} onChange={(e) => setSearchPriority(e.target.value)}>
@@ -31,8 +31,7 @@ const FilterBox = ({ update, setUpdate, setSearchParameters }: { update: boolean
                     </Select>
                     <Button variant="contained" type="submit" id="SearchBox">Search</Button>
                 </Stack>
-            </FormControl>
-
+            </form>
         </Container>
     );
 }
