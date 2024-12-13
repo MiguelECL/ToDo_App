@@ -1,6 +1,6 @@
 import { SyntheticEvent, useState } from "react";
 import { handleAddToDo } from "../container/handleAddTodo";
-import { Button, Container, Dialog, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Container, Dialog, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -40,10 +40,11 @@ const CreateModal = ({ update, setUpdate }: { update: boolean, setUpdate: Functi
             <Dialog open={open} onClose={handleClose}>
                 <Container maxWidth="lg" sx={{ padding: 5 }}>
                     <form onSubmit={(e) => handleAddToDo(e, Add)}>
+                        <Typography variant="h4" sx={{paddingBottom: 5}}>Add To Do</Typography>
                         <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)}></TextField>
                         <FormControl>
-                            <InputLabel>Priority</InputLabel>
-                            <Select label="Priority" defaultValue={"Medium"}>
+                            <InputLabel id="priority-select-label">Priority</InputLabel>
+                            <Select label="Priority" labelId="priority-select-label" value={priority} onChange={(e) => setPriority(e.target.value)} defaultValue={"Medium"}>
                                 <MenuItem value="High">High</MenuItem>
                                 <MenuItem value="Medium">Medium</MenuItem>
                                 <MenuItem value="Low">Low</MenuItem>

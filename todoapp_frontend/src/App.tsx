@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import ToDoList from './components/ToDoList';
-import NavBar from './components/NavBar';
+import ToDoList from './ToDoList';
+import NavBar from './components/presentational/NavBar';
 import FilterBox from './components/presentational/FilterBox';
-import TimeComponent from './components/TimeComponent';
+import TimeComponent from './components/presentational/TimeComponent';
 import CreateModal from './components/presentational/CreateModal';
 import { TimeDataContext } from './context/TimeDataContext';
 import { Container } from '@mui/material';

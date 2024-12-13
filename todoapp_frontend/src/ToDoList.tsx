@@ -1,6 +1,7 @@
 import { SyntheticEvent, useEffect, useState } from "react";
-import { useDataContext } from "../context/TimeDataContext";
-import { Button, Container, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import { useDataContext } from "./context/TimeDataContext";
+import { Button, Container, Dialog, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
     const [modal, setModal] = useState(false);
@@ -122,6 +123,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }).catch(error => {
             console.log('failed to communicte with API , is the server running? Error: ' + error);
         })
+        handleClose();
     }
 
     const handleCheck = (e:SyntheticEvent, item:any) => {
@@ -198,6 +200,15 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             setCurrentPage(currentPage - 1);
             setUpdate(!update);
         }
+    }
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
     }
 
     const handlePaginateNext = () => {
@@ -279,7 +290,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                                 setCreationDate(item.creationDate);
                                 setDoneDate(item.doneDate);
                                 setDoneFlag(item.doneFlag);
-                                toggleModal();
+                                handleOpen();
                             }}>Edit</Button></TableCell>
                             
                         </TableRow>
@@ -288,25 +299,25 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             </Table>
             <Container className="pageControls">
                 { (currentPage !== 1 ) && <button onClick={handlePaginatePrev}>{currentPage-1}</button>}
-                {currentPage}
+                <Typography sx={{justifySelf: "center"}}>{currentPage}</Typography>
                 {toDos.length > currentPage*10 && <button onClick={handlePaginateNext}>{currentPage+1}</button>}
             </Container>
-            {modal &&
-                <Container className="Modal">
+            <Dialog open={open} onClose={handleClose}>
+                <Container maxWidth="lg" sx={{ padding: 5 }}>
                     <form onSubmit={(e) => handleEdit(e)}>
-                        <h1>Edit To-Do</h1>
+                        <Typography variant="h4" sx={{paddingBottom: 5}}>Edit To Do</Typography>
                         <TextField type="text" value={name} onChange={(e) => setName(e.target.value)}></TextField>
                         <Select value={priority} onChange={(e) => setPriority(e.target.value)}>
                             <MenuItem value="High">High</MenuItem>
                             <MenuItem value="Medium">Medium</MenuItem>
                             <MenuItem value="Low">Low</MenuItem>
                         </Select>
-                        <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}></input>
+                        {/* <DatePicker type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}></DatePicker> */}
                         <Button type="submit">Edit To Do</Button>
                         <Button onClick={(e) => handleDelete(e)}>Delete To Do</Button>
                     </form>
                 </Container>
-            }
+            </Dialog>
         </Container>
     );
 }

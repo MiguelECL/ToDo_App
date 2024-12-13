@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import App from './App';
-import ToDoList from './components/ToDoList';
+import App from '../App';
+import {test, expect} from "vitest";
 
 test('renders app', () => {
   const {container} = render(<App />);

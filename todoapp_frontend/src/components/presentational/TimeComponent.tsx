@@ -1,6 +1,6 @@
 import { Container, List, ListItem, ListItemText, ListSubheader, Stack } from "@mui/material";
-import { useDataContext } from "../context/TimeDataContext";
-import { formatData } from "./container/formatData";
+import { useDataContext } from "../../context/TimeDataContext";
+import { formatData } from "../container/formatData";
 
 const TimeComponent = () => {
     const timeData = useDataContext();
