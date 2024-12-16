@@ -39,7 +39,7 @@ const CreateModal = ({ update, setUpdate }: { update: boolean, setUpdate: Functi
             <Button variant="contained" fullWidth className="addbutton" onClick={handleOpen}>Add To Do</Button>
             <Dialog open={open} onClose={handleClose}>
                 <Container maxWidth="lg" sx={{ padding: 5 }}>
-                    <form onSubmit={(e) => {handleAddToDo(e, Add); handleClose();}}>
+                    <form onSubmit={(e) => {handleAddToDo(e, Add, update, setUpdate); handleClose();}}>
                         <Typography variant="h4" sx={{paddingBottom: 5}}>Add To Do</Typography>
                         <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)}></TextField>
                         <FormControl>

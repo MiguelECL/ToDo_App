@@ -3,6 +3,7 @@ import { useDataContext } from "./context/TimeDataContext";
 import { Button, Container, Dialog, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { handleAddToDo } from "./components/container/handleAddTodo";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
 
@@ -91,7 +92,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }).catch(error => {
             console.log('Failed to fetch Data ' + error)
         });
-    },[update,searchParameters]);
+    },[update,searchParameters,]);
 
 
     const handleEdit = (e:SyntheticEvent) =>  {
@@ -113,6 +114,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             body: JSON.stringify(updateToDo)
         }).then(() => {
             setUpdate(!update);
+            handleClose();
         }).catch(error => {
             console.log('failed to communicte with API , is the server running? Error: ' + error);
         })
@@ -228,38 +230,38 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             setUpdate(!update);
         }
     }
-    //item.doneFlag ? {textDecoration:"line-through",textDecorationColor:"gray",opacity:"0.5"} : {textDecoration:"none"}
+
     const ToDoRowStyle = (item:any) => {
         let itemDate = Date.parse(item.dueDate);
         let style = {};
         if (item.doneFlag){
             if (item.dueDate === ""){
-                style = {"background-color":"",
+                style = {"backgroundColor":"",
                     "text-decoration":"line-through",
                     "opacity":"0.4"
                 };
             } else if ((itemDate - Date.now()) < 604800000){
-                style = {"background-color":"FireBrick",
+                style = {"backgroundColor":"IndianRed",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             } else if ((itemDate - Date.now()) < 1.2096E+9){
-                style = {"background-color":"GoldenRod",
+                style = {"backgroundColor":"GoldenRod",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             } else if ((itemDate - Date.now()) >= 1.2096E+9){
-                style = {"background-color":"green",
+                style = {"backgroundColor":"green",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             }
         } else {
             if (item.dueDate === ""){
-                style = {"background-color":"",};
+                style = {"backgroundColor":"",};
             } else if ((itemDate - Date.now()) < 604800000){
-                style = {"background-color":"FireBrick"};
+                style = {"backgroundColor":"IndianRed"};
             } else if ((itemDate - Date.now()) < 1.2096E+9){
-                style = {"background-color":"GoldenRod"};
+                style = {"backgroundColor":"GoldenRod"};
             } else if ((itemDate - Date.now()) >= 1.2096E+9){
-                style = {"background-color":"green"};
+                style = {"backgroundColor":"green"};
             }
         }
 

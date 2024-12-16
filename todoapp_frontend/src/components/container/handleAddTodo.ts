@@ -11,7 +11,7 @@ export const handleAddToDo = (e: SyntheticEvent, Add: {
     doneFlag: boolean,
     doneDate: string,
     creationDate: string,
-}) => {
+}, update: Boolean, setUpdate: Function) => {
 
     e.preventDefault();
     
@@ -28,6 +28,7 @@ export const handleAddToDo = (e: SyntheticEvent, Add: {
             body: JSON.stringify(Add)
         }).then(() => {
             Add.setName("");
+            setUpdate(!update);
         }).catch(error => {
             console.log(error);
         })
