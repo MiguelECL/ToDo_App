@@ -4,20 +4,24 @@ import { Button, Container, Dialog, MenuItem, Select, Table, TableBody, TableCel
 import { DatePicker } from "@mui/x-date-pickers";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
-    const [modal, setModal] = useState(false);
 
-    const [id, setId] = useState(Date.now());
-    const [name, setName] = useState("");
-    const [priority, setPriority] = useState("");
-    const [dueDate, setDueDate] = useState("");
-    const [creationDate, setCreationDate] = useState("");
-    const [doneDate, setDoneDate] = useState("");
-    const [doneFlag, setDoneFlag] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    // react usueState of an Object containing the data of the ToDo
+    const [todoData, setTodoData] = useState({
+        id: Date.now(),
+        name: "",
+        priority: "",
+        dueDate: "",
+        creationDate: "",
+        doneDate: "",
+        doneFlag: false
+    });
+    
+    const [open, setOpen] = useState(false); // react useState of a boolean to control the opening and closing of the dialog.
+    const [isLoading, setIsLoading] = useState(true); // react useState of a boolean monitor the loading of the data.
     const [toDos, setToDos] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentToDos, setCurrentToDos] = useState([]);
-    const [updateMetrics, setUpdateMetrics] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1); // react useState of a number to monitor the current page of the pagination.
+    const [currentToDos, setCurrentToDos] = useState([]);  // react useState of an array to store the current ToDos to be displayed.
+    const [updateMetrics, setUpdateMetrics] = useState(false); // react useState of a boolean to update the metrics.
     
 
     const TimeData = useDataContext();
@@ -87,22 +91,26 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         });
     },[update,searchParameters]);
 
-    const toggleModal = () => {
-        setModal(!modal);
-    }
 
     const handleEdit = (e:SyntheticEvent) =>  {
         e.preventDefault();
         let date = 0;
-        date = Date.parse(doneDate);
+        date = Date.parse(todoData.doneDate);
         console.log(date);
-        const updateToDo = {id, name, dueDate, doneFlag, doneDate, priority, creationDate};
-        fetch('http://localhost:9090/todos/'+[id],{
+        const updateToDo = {
+            id: todoData.id,
+            name: todoData.name,
+            dueDate: todoData.dueDate,
+            doneFlag: todoData.doneFlag,
+            doneDate: todoData.doneDate,
+            priority: todoData.priority,
+            creationDate: todoData.creationDate
+        };
+        fetch('http://localhost:9090/todos/'+[updateToDo.id],{
             method:"PUT",
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify(updateToDo)
         }).then(() => {
-            toggleModal();
             setUpdate(!update);
         }).catch(error => {
             console.log('failed to communicte with API , is the server running? Error: ' + error);
@@ -112,13 +120,12 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     const handleDelete = (e:SyntheticEvent) => {
         e.preventDefault();
         
-        fetch('http://localhost:9090/todos/'+[id],{
+        fetch('http://localhost:9090/todos/'+[todoData.id],{
             method:"DELETE",
             headers: {
                 "Access-Control-Allow-Origin":"*"
             }
         }).then(() => {
-            toggleModal();
             setUpdate(!update);
         }).catch(error => {
             console.log('failed to communicte with API , is the server running? Error: ' + error);
@@ -202,7 +209,6 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }
     }
 
-    const [open, setOpen] = useState(false);
     const handleOpen = () => {
         setOpen(true);
     }
@@ -283,13 +289,15 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                             <TableCell>{item.dueDate}</TableCell>
                             <TableCell>{item.doneFlag ? "Done" : "Undone"}</TableCell>
                             <TableCell><Button variant="outlined" onClick={() => {
-                                setId(item.id);
-                                setName(item.name);
-                                setPriority(item.priority);
-                                setDueDate(item.dueDate);
-                                setCreationDate(item.creationDate);
-                                setDoneDate(item.doneDate);
-                                setDoneFlag(item.doneFlag);
+                                setTodoData({
+                                    id: item.id,
+                                    name: item.name,
+                                    priority: item.priority,
+                                    dueDate: item.dueDate,
+                                    creationDate: item.creationDate,
+                                    doneDate: item.doneDate,
+                                    doneFlag: item.doneFlag
+                                });
                                 handleOpen();
                             }}>Edit</Button></TableCell>
                             
@@ -306,8 +314,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 <Container maxWidth="lg" sx={{ padding: 5 }}>
                     <form onSubmit={(e) => handleEdit(e)}>
                         <Typography variant="h4" sx={{paddingBottom: 5}}>Edit To Do</Typography>
-                        <TextField type="text" value={name} onChange={(e) => setName(e.target.value)}></TextField>
-                        <Select value={priority} onChange={(e) => setPriority(e.target.value)}>
+                        <TextField type="text" value={name} onChange={(e) => setTodoData({ ...todoData, name:e.target.value})}></TextField>
+                        <Select value={todoData.priority} onChange={(e) => setTodoData({ ...todoData, priority: e.target.value })}>
                             <MenuItem value="High">High</MenuItem>
                             <MenuItem value="Medium">Medium</MenuItem>
                             <MenuItem value="Low">Low</MenuItem>
