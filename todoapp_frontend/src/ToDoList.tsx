@@ -2,8 +2,11 @@ import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "./context/TimeDataContext";
 import { Button, Container, Dialog, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
+
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Importing the backend URL from the .env file.
 
     // react usueState of an Object containing the data of the ToDo
     const [todoData, setTodoData] = useState({
@@ -23,14 +26,13 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     const [currentToDos, setCurrentToDos] = useState([]);  // react useState of an array to store the current ToDos to be displayed.
     const [updateMetrics, setUpdateMetrics] = useState(false); // react useState of a boolean to update the metrics.
     
-
+    // Variables for sorting
     const TimeData = useDataContext();
     let prioritySort = ["no","ascending","descending"];
     let dateSort = ["no","ascending","descending"];
     const [indexPrioritySort, setIndexPrioritySort] = useState(0);
     const [indexDateSort, setIndexDateSort] = useState(0);
 
-    //Variables for sorting
 
     const handlePrioritySort = (e:SyntheticEvent) => {
         if(indexPrioritySort === 2){
@@ -63,7 +65,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
 
     // FETCH DATA GET
     useEffect(() => {
-        let finalEndpoint = 'http://localhost:9090/todos?searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
+        let finalEndpoint =  `${BACKEND_URL}` + '/todos?searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
         fetch(finalEndpoint,{
             method:"GET",
             headers: {"Content-Type":"application/json"}
@@ -73,7 +75,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }}).then((data) => {
             setToDos(data);
         }).then(() => {
-            let finalEndpoint = 'http://localhost:9090/todos?page=' + parameter0 +'&searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
+            let finalEndpoint = `${BACKEND_URL}` + '/todos?page=' + parameter0 +'&searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
             fetch(finalEndpoint,{
                 method:"GET",
                 headers: {"Content-Type":"application/json"}
@@ -96,7 +98,6 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         e.preventDefault();
         let date = 0;
         date = Date.parse(todoData.doneDate);
-        console.log(date);
         const updateToDo = {
             id: todoData.id,
             name: todoData.name,
@@ -106,7 +107,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             priority: todoData.priority,
             creationDate: todoData.creationDate
         };
-        fetch('http://localhost:9090/todos/'+[updateToDo.id],{
+        fetch( `${BACKEND_URL}` + '/todos/'+[updateToDo.id],{
             method:"PUT",
             headers: {'Content-Type':'application/json'},
             body: JSON.stringify(updateToDo)
@@ -120,7 +121,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     const handleDelete = (e:SyntheticEvent) => {
         e.preventDefault();
         
-        fetch('http://localhost:9090/todos/'+[todoData.id],{
+        fetch(`${BACKEND_URL}/todos/${todoData.id}`,{
             method:"DELETE",
             headers: {
                 "Access-Control-Allow-Origin":"*"
@@ -128,7 +129,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         }).then(() => {
             setUpdate(!update);
         }).catch(error => {
-            console.log('failed to communicte with API , is the server running? Error: ' + error);
+            console.log('failed to communicate with API, is the server running? Error: ' + error);
         })
         handleClose();
     }
@@ -139,8 +140,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
        item.doneFlag = (!item.doneFlag);
        if(item.doneFlag){
             let addDoneDate = (new Date().toISOString());
-            let updateToDo = {...item,doneDate:addDoneDate};
-            fetch('http://localhost:9090/todos/' + [item.id] + '/done',{
+            let updateToDo = {...item, doneDate:addDoneDate};
+            fetch(`${BACKEND_URL}/todos/${item.id}/done`,{
                 method: "POST",
                 headers: {"Content-Type":"application/json"},
                 body: JSON.stringify(updateToDo)
@@ -150,8 +151,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             console.log("posted");
        } else {
             let addDoneDate = ("");
-            let updateToDo = {...item,doneDate:addDoneDate};
-            fetch('http://localhost:9090/todos/' + [item.id] + '/undone',{
+            let updateToDo = {...item, doneDate:addDoneDate};
+            fetch(`${BACKEND_URL}/todos/${item.id}/undone`,{
                 method: "PUT",
                 headers: {"Content-Type":"application/json"},
                 body: JSON.stringify(updateToDo)
@@ -310,17 +311,18 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 <Typography sx={{justifySelf: "center"}}>{currentPage}</Typography>
                 {toDos.length > currentPage*10 && <button onClick={handlePaginateNext}>{currentPage+1}</button>}
             </Container>
+            {/* DIALOG FOR EDITING */}
             <Dialog open={open} onClose={handleClose}>
                 <Container maxWidth="lg" sx={{ padding: 5 }}>
                     <form onSubmit={(e) => handleEdit(e)}>
                         <Typography variant="h4" sx={{paddingBottom: 5}}>Edit To Do</Typography>
-                        <TextField type="text" value={name} onChange={(e) => setTodoData({ ...todoData, name:e.target.value})}></TextField>
+                        <TextField type="text" value={todoData.name} onChange={(e) => setTodoData({ ...todoData, name:e.target.value})}></TextField>
                         <Select value={todoData.priority} onChange={(e) => setTodoData({ ...todoData, priority: e.target.value })}>
                             <MenuItem value="High">High</MenuItem>
                             <MenuItem value="Medium">Medium</MenuItem>
                             <MenuItem value="Low">Low</MenuItem>
                         </Select>
-                        {/* <DatePicker type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}></DatePicker> */}
+                        <DatePicker value={dayjs(todoData.dueDate)} onChange={(newValue) => setTodoData({...todoData, dueDate: dayjs(newValue).format("YYYY-MM-DD")})}></DatePicker>
                         <Button type="submit">Edit To Do</Button>
                         <Button onClick={(e) => handleDelete(e)}>Delete To Do</Button>
                     </form>

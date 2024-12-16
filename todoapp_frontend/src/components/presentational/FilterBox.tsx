@@ -11,11 +11,12 @@ const FilterBox = ({ update, setUpdate, setSearchParameters }: { update: boolean
     const HandleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         setSearchParameters([searchName, searchPriority, searchState])
+        setUpdate(!update);
     }
 
     return (
         <Container className="FilterBox">
-            <form>
+            <form onSubmit={HandleSubmit}>
                 <Stack spacing={2}>
                     <TextField label="Name" variant="outlined" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
                     <Select value={searchPriority} onChange={(e) => setSearchPriority(e.target.value)}>
