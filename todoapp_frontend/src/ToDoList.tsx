@@ -1,6 +1,8 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "./context/TimeDataContext";
-import { Button, Container, Dialog, MenuItem, Select, Stack, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Button, Container, Dialog, Icon, MenuItem, Select, Stack, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { handleAddToDo } from "./components/container/handleAddTodo";
@@ -241,15 +243,15 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                     "opacity":"0.4"
                 };
             } else if ((itemDate - Date.now()) < 604800000){
-                style = {"backgroundColor":"IndianRed",
+                style = {"backgroundColor":"LightCoral",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             } else if ((itemDate - Date.now()) < 1.2096E+9){
-                style = {"backgroundColor":"GoldenRod",
+                style = {"backgroundColor":"Bisque",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             } else if ((itemDate - Date.now()) >= 1.2096E+9){
-                style = {"backgroundColor":"green",
+                style = {"backgroundColor":"DarkSeaGreen",
                     "text-decoration":"line-through",
                 "opacity":"0.4"};
             }
@@ -257,11 +259,11 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             if (item.dueDate === ""){
                 style = {"backgroundColor":"",};
             } else if ((itemDate - Date.now()) < 604800000){
-                style = {"backgroundColor":"IndianRed"};
+                style = {"backgroundColor":"LightCoral"};
             } else if ((itemDate - Date.now()) < 1.2096E+9){
-                style = {"backgroundColor":"GoldenRod"};
+                style = {"backgroundColor":"Bisque"};
             } else if ((itemDate - Date.now()) >= 1.2096E+9){
-                style = {"backgroundColor":"green"};
+                style = {"backgroundColor":"DarkSeaGreen"};
             }
         }
 
@@ -284,14 +286,14 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 <TableBody>
                     {!isLoading && currentToDos.map((item:any) => (
                         <TableRow key={item.id} style={ToDoRowStyle(item)}>
-                            <TableCell><Button variant="outlined" onClick={(e) => {
+                            <TableCell><Button variant="contained" onClick={(e) => {
                                 handleCheck(e,item)}}>
                             Toggle</Button></TableCell>
                             <TableCell>{item.name}</TableCell>
                             <TableCell>{item.priority}</TableCell>
                             <TableCell>{item.dueDate}</TableCell>
                             <TableCell>{item.doneFlag ? "Done" : "Undone"}</TableCell>
-                            <TableCell><Button variant="outlined" onClick={() => {
+                            <TableCell><Button variant="contained" onClick={() => {
                                 setTodoData({
                                     id: item.id,
                                     name: item.name,
@@ -327,8 +329,8 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                             <MenuItem value="Low">Low</MenuItem>
                         </Select>
                         <DatePicker value={dayjs(todoData.dueDate)} onChange={(newValue) => setTodoData({...todoData, dueDate: dayjs(newValue).format("YYYY-MM-DD")})}></DatePicker>
-                        <Button type="submit">Edit To Do</Button>
-                        <Button onClick={(e) => handleDelete(e)}>Delete To Do</Button>
+                        <Button type="submit"><EditIcon/>Edit To Do</Button>
+                        <Button onClick={(e) => handleDelete(e)}><DeleteIcon/>Delete To Do</Button>
                     </form>
                 </Container>
             </Dialog>

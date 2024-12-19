@@ -1,4 +1,4 @@
-import { Container, List, ListItem, ListItemText, ListSubheader, Stack } from "@mui/material";
+import { Container, List, ListItem, ListItemText, ListSubheader, Stack, Typography } from "@mui/material";
 import { useDataContext } from "../../context/TimeDataContext";
 import { formatData } from "../container/formatData";
 
@@ -16,16 +16,10 @@ const TimeComponent = () => {
                         </ListItem>
                     </List>
                 </Stack>
-                <Stack className="timeColumn">
-                    <List subheader={<ListSubheader>Average Time to Finish Tasks by Priority</ListSubheader>}>
+                <Stack className="timeColumn" direction="row">
+                    <List>
                         <ListItem>
-                            <ListItemText primary="Low" secondary={`${stringLow}`}/>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText primary="Medium" secondary={`${stringMedium}`}/>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText primary="High" secondary={`${stringHigh}`}/>
+                            <ListItemText primary="Average Time to Finish Tasks by Priority" secondary={`High: ${stringHigh} - Medium: ${stringMedium} - Low: ${stringLow}`}/>
                         </ListItem>
                     </List>
                 </Stack>
