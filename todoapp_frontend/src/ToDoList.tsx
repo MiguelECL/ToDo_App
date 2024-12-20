@@ -1,17 +1,10 @@
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useDataContext } from "./context/TimeDataContext";
-import { Button, Container, Dialog, Icon, MenuItem, Select, Stack, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
+import { ToDoListPresentation } from "./components/ToDoListPresentation";
 import { handleAddToDo } from "./components/container/handleAddTodo";
 
 const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:string, searchParameters:Array<string>, update:boolean, setUpdate:Function}) => {
-
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL; // Importing the backend URL from the .env file.
-
-    // react usueState of an Object containing the data of the ToDo
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [todoData, setTodoData] = useState({
         id: Date.now(),
         name: "",
@@ -21,28 +14,23 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         doneDate: "",
         doneFlag: false
     });
-    
-    const [open, setOpen] = useState(false); // react useState of a boolean to control the opening and closing of the dialog.
-    const [isLoading, setIsLoading] = useState(true); // react useState of a boolean monitor the loading of the data.
+    const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [toDos, setToDos] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1); // react useState of a number to monitor the current page of the pagination.
-    const [currentToDos, setCurrentToDos] = useState([]);  // react useState of an array to store the current ToDos to be displayed.
-    const [updateMetrics, setUpdateMetrics] = useState(false); // react useState of a boolean to update the metrics.
-    
-    // Variables for sorting
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentToDos, setCurrentToDos] = useState([]);
+    const [updateMetrics, setUpdateMetrics] = useState(false);
     const TimeData = useDataContext();
     let prioritySort = ["no","ascending","descending"];
     let dateSort = ["no","ascending","descending"];
     const [indexPrioritySort, setIndexPrioritySort] = useState(0);
     const [indexDateSort, setIndexDateSort] = useState(0);
 
-
     const handlePrioritySort = (e:SyntheticEvent) => {
         if(indexPrioritySort === 2){
             setIndexPrioritySort(0);
         } else {
             setIndexPrioritySort(indexPrioritySort + 1);
-            console.log(indexPrioritySort);
         }
         setUpdate(!update);
     }
@@ -52,12 +40,10 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             setIndexDateSort(0);
         } else {
             setIndexDateSort(indexDateSort + 1);
-            console.log(indexDateSort);
         }
         setUpdate(!update);
     }
-   
-    // SEARCH AND SORT PARAMETERS
+
     let parameter0 = currentPage;
     let parameter1 = searchParameters[0];
     let parameter2 = searchParameters[1];
@@ -65,8 +51,6 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     let parameter4 = prioritySort[indexPrioritySort];
     let parameter5 = dateSort[indexDateSort]
 
-
-    // FETCH DATA GET
     useEffect(() => {
         let finalEndpoint =  `${BACKEND_URL}` + '/todos?searchName=' + parameter1 + '&searchPriority=' + parameter2 + '&searchState=' + parameter3 + '&sortPriority=' + parameter4 + '&sortDate=' + parameter5;
         fetch(finalEndpoint,{
@@ -95,7 +79,6 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             console.log('Failed to fetch Data ' + error)
         });
     },[update,searchParameters,]);
-
 
     const handleEdit = (e:SyntheticEvent) =>  {
         e.preventDefault();
@@ -152,7 +135,6 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
             }).then(() => {
                 setUpdate(!update);
             })
-            console.log("posted");
        } else {
             let addDoneDate = ("");
             let updateToDo = {...item, doneDate:addDoneDate};
@@ -162,14 +144,10 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
                 body: JSON.stringify(updateToDo)
             }).then(()=> {
                 setUpdate(!update);
-               
             })
-            console.log("putted");
        }
-       
     }
-    
-    // METRICS
+
     useEffect(() => {
         let timeTotal = 0;
         let numberOfItems = 0;
@@ -178,14 +156,11 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
         TimeData.setTimeMedium(0);
         TimeData.setTimeLow(0);
         toDos.map((item:any) => {
-            // if item is done, compute difference in minutes that it took to finish said task.
             if(item.doneFlag === true && item.doneDate !== ""){
-                console.log("yeah");
                 numberOfItems++;
                 let creationTime = Date.parse(item.creationDate);
                 let doneTime = Date.parse(item.doneDate);
-                let differenceSeconds = ((doneTime - creationTime)/(1000)); //seconds
-                console.log(differenceSeconds);
+                let differenceSeconds = ((doneTime - creationTime)/(1000));
                 timeTotal += differenceSeconds;
                 
                 TimeData.setTimeTotal(timeTotal/numberOfItems);
@@ -224,10 +199,7 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
 
     const handlePaginateNext = () => {
         let sizeToDos = toDos.length;
-        console.log(sizeToDos);
-        
         if(sizeToDos > currentPage*10){
-            console.log("here");
             setCurrentPage(currentPage + 1);
             setUpdate(!update);
         }
@@ -271,70 +243,25 @@ const ToDoList = ({endpoint, searchParameters, update, setUpdate}:{endpoint:stri
     }
 
     return (
-        <Container className="ToDoList">
-            <Table className="todo-table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Mark</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell><Button variant="outlined" onClick={(e) => handlePrioritySort(e)}>Priority &lt;&gt; </Button></TableCell>
-                        <TableCell><Button variant="outlined" onClick={(e) => handleDateSort(e)}>Due Date &lt;&gt; </Button></TableCell>
-                        <TableCell>State</TableCell>
-                        <TableCell>Edit</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {!isLoading && currentToDos.map((item:any) => (
-                        <TableRow key={item.id} style={ToDoRowStyle(item)}>
-                            <TableCell><Button variant="contained" onClick={(e) => {
-                                handleCheck(e,item)}}>
-                            Toggle</Button></TableCell>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell>{item.priority}</TableCell>
-                            <TableCell>{item.dueDate}</TableCell>
-                            <TableCell>{item.doneFlag ? "Done" : "Undone"}</TableCell>
-                            <TableCell><Button variant="contained" onClick={() => {
-                                setTodoData({
-                                    id: item.id,
-                                    name: item.name,
-                                    priority: item.priority,
-                                    dueDate: item.dueDate,
-                                    creationDate: item.creationDate,
-                                    doneDate: item.doneDate,
-                                    doneFlag: item.doneFlag
-                                });
-                                handleOpen();
-                            }}>Edit</Button></TableCell>
-                            
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <Container className="pageControls" sx={{justifyItems: "center", alignItems: "center"}}>
-                <Stack direction="row" spacing={2}>
-                { (currentPage !== 1 ) && <Button onClick={handlePaginatePrev}>{currentPage-1}</Button>}
-                <Button disabled>{currentPage}</Button>
-                {toDos.length > currentPage*10 && <Button onClick={handlePaginateNext}>{currentPage+1}</Button>}
-                </Stack>
-            </Container>
-            {/* DIALOG FOR EDITING */}
-            <Dialog open={open} onClose={handleClose}>
-                <Container maxWidth="lg" sx={{ padding: 5 }}>
-                    <form onSubmit={(e) => handleEdit(e)}>
-                        <Typography variant="h4" sx={{paddingBottom: 5}}>Edit To Do</Typography>
-                        <TextField type="text" value={todoData.name} onChange={(e) => setTodoData({ ...todoData, name:e.target.value})}></TextField>
-                        <Select value={todoData.priority} onChange={(e) => setTodoData({ ...todoData, priority: e.target.value })}>
-                            <MenuItem value="High">High</MenuItem>
-                            <MenuItem value="Medium">Medium</MenuItem>
-                            <MenuItem value="Low">Low</MenuItem>
-                        </Select>
-                        <DatePicker value={dayjs(todoData.dueDate)} onChange={(newValue) => setTodoData({...todoData, dueDate: dayjs(newValue).format("YYYY-MM-DD")})}></DatePicker>
-                        <Button type="submit"><EditIcon/>Edit To Do</Button>
-                        <Button onClick={(e) => handleDelete(e)}><DeleteIcon/>Delete To Do</Button>
-                    </form>
-                </Container>
-            </Dialog>
-        </Container>
+        <ToDoListPresentation
+            isLoading={isLoading}
+            currentToDos={currentToDos}
+            currentPage={currentPage}
+            toDos={toDos}
+            open={open}
+            todoData={todoData}
+            handlePrioritySort={handlePrioritySort}
+            handleDateSort={handleDateSort}
+            handleCheck={handleCheck}
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            handlePaginatePrev={handlePaginatePrev}
+            handlePaginateNext={handlePaginateNext}
+            setTodoData={setTodoData}
+            ToDoRowStyle={ToDoRowStyle}
+        />
     );
 }
 

@@ -1,23 +1,25 @@
-import { expect, test, vi, describe } from 'vitest';
+import { expect, test } from "vitest";
 import React from 'react';
+import { render } from '@testing-library/react';
+import '@testing-library/jest-dom'; // Corrected import statement
 import App from '../App';
-import { createRoot } from 'react-dom/client';
 
-// Mock createRoot
-vi.mock('react-dom/client', () => ({
-  createRoot: vi.fn().mockReturnValue({
-    render: vi.fn(),
-  }),
-}));
-
-describe('index.tsx', () => {
-  test('renders without crashing', () => {
-    const rootElement = document.createElement('div');
-    rootElement.id = 'root';
-    document.body.appendChild(rootElement);
-
-    // Require the index file after setting up the mock
-    require('../index');
-
-  });
+test('expects 1 to be 1', () => {
+  expect(1).toBe(1);
 });
+
+test('renders without crashing', () => {
+  const div = document.createElement('div');
+  div.id = 'root';
+  document.body.appendChild(div);
+
+  render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    { container: div }
+  );
+
+  expect(div.querySelector('div')).toBeInTheDocument();
+});
+
